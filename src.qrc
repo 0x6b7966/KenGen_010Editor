@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/Label">
+        <file>image/1.bmp</file>
+    </qresource>
+    <qresource prefix="/program">
+        <file>image/Editor.ico</file>
+    </qresource>
+</RCC>
