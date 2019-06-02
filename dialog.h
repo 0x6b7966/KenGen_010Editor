@@ -15,15 +15,14 @@ class Dialog : public QDialog
 	Q_OBJECT
 
 public:
-	explicit Dialog( QWidget *parent = nullptr );
+	explicit Dialog(QWidget* parent = nullptr);
 	~Dialog();
-
 
 protected:
 	void init();
-	void mousePressEvent( QMouseEvent *e );
-	void mouseMoveEvent( QMouseEvent *e );
-	void mouseReleaseEvent( QMouseEvent *e );
+	void mousePressEvent(QMouseEvent* e);
+	void mouseMoveEvent(QMouseEvent* e);
+	void mouseReleaseEvent(QMouseEvent* e);
 private:
 	QPoint last;
 
@@ -33,7 +32,7 @@ private slots:
 
 	void on_rBtnVersion_clicked();
 
-	void on_rBtnNumber_clicked( bool checked );
+	void on_rBtnNumber_clicked(bool checked);
 
 	// 获取序列号
 	void on_btnGetSerial_clicked();
@@ -41,8 +40,10 @@ private slots:
 	// 复制序列号
 	void on_btnCopySerial_clicked();
 
+	void on_cBtnRandom_clicked(bool checked);
+
 private:
-	Ui::Dialog *ui;
+	Ui::Dialog* ui;
 };
 
 #endif // DIALOG_H
