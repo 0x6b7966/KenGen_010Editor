@@ -3,10 +3,10 @@
 #include <stdio.h>
 
 // 存储序列号
-BYTE KEY[10] = { 0 };
+BYTE KEY[ 10 ] = { 0 };
 
 // 全局字典
-DWORD dict[256] = {
+DWORD dict[ 256 ] = {
 	0x39CB44B8, 0x23754F67, 0x5F017211, 0x3EBB24DA, 0x351707C6, 0x63F9774B, 0x17827288, 0x0FE74821,
 	0x5B5F670F, 0x48315AE8, 0x785B7769, 0x2B7A1547, 0x38D11292, 0x42A11B32, 0x35332244, 0x77437B60,
 	0x1EAB3B10, 0x53810000, 0x1D0212AE, 0x6F0377A8, 0x43C03092, 0x2D3C0A8E, 0x62950CBF, 0x30F06FFA,
@@ -46,7 +46,7 @@ DWORD dict[256] = {
  */
 DWORD GetRandNum()
 {
-	srand((unsigned)time(NULL));
+	srand( ( unsigned ) time( NULL ) );
 	return rand() % 0x3E8;
 }
 
@@ -56,32 +56,33 @@ DWORD GetRandNum()
  * \param regmen 注册人数
  * \param day    天数
  */
-void GetEncryStr(const char* szName, DWORD regmen, DWORD day)
+void GetEncryStr( const char *szName, DWORD regmen, DWORD day )
 {
 	DWORD ESI = regmen * 0xF;
 	DWORD LOCAL1 = 0;
-	DWORD LOCAL2 = (day * 0x11) & 0xFF;
+	DWORD LOCAL2 = ( day * 0x11 ) & 0xFF;
 	DWORD LOCAL3 = 0;
-	BYTE EAX[4] = { 0 };
-	int NameLen = strlen(szName);
-	for (int i = 0; i < NameLen; i++)
+	//DWORD LOCAL4 = 0;
+	BYTE EAX[ 4 ] = { 0 };
+	int NameLen = strlen( szName );
+	for ( int i = 0; i < NameLen; i++ )
 	{
-		char nameChar = toupper(szName[i]);
+		char nameChar = toupper( szName[ i ] );
 		LOCAL1 =
-			(((LOCAL1 + dict[nameChar]) ^ dict[(nameChar + 0xD) & 0xFF]) * dict[(nameChar + 0x2F) & 0xFF])
-			+ dict[LOCAL2]
-			+ dict[ESI & 0xFF]
-			+ dict[LOCAL3];
+			( ( ( LOCAL1 + dict[ nameChar ] ) ^ dict[ ( nameChar + 0xD ) & 0xFF ] ) * dict[ ( nameChar + 0x2F ) & 0xFF ] )
+			+ dict[ LOCAL2 ]
+			+ dict[ ESI & 0xFF ]
+			+ dict[ LOCAL3 ];
 
 		ESI += 0xD;
 		LOCAL2 += 0x9;
 		LOCAL3 += 0x13;
 	}
-	*(DWORD*)EAX = LOCAL1;
-	KEY[4] = EAX[0];
-	KEY[5] = EAX[1];
-	KEY[6] = EAX[2];
-	KEY[7] = EAX[3];
+	*( DWORD * ) EAX = LOCAL1;
+	KEY[ 4 ] = EAX[ 0 ];
+	KEY[ 5 ] = EAX[ 1 ];
+	KEY[ 6 ] = EAX[ 2 ];
+	KEY[ 7 ] = EAX[ 3 ];
 }
 
 /**
@@ -91,45 +92,46 @@ void GetEncryStr(const char* szName, DWORD regmen, DWORD day)
  * \param flag   版本注册选中标记
  * \param serial 序列号存储字符串
  */
-void CalcReg(const char* szName, DWORD day, DWORD regmen, bool flag, char* serial)
+void CalcReg( const char *szName, DWORD day, bool flag, char *serial )
 {
-	memset(KEY, 0, sizeof(KEY)); // 清空数组
+	memset( KEY, 0, sizeof( KEY ) ); // 清空数组
+	DWORD regmen = GetRandNum();
 	/*
 	判断是否整除函数的结果为：regmen
 	对应公式为：regmen = ((((( KEY[1] ^ KEY[7] ) * 0x100 + ( KEY[2] ^ KEY[5] )) ^ 0x7892 ) + 0x4D30 )  ^ 0x3421) / 0xB
 	逆向计算得出：( KEY[1] ^ KEY[7] ) * 0x100 + ( KEY[2] ^ KEY[5] ) 的值，WORD
 	*/
-	WORD temp_data1 = (((regmen * 0xB) ^ 0x3421) - 0x4D30) ^ 0x7892;
-	if (flag)
+	WORD temp_data1 = ( ( ( regmen * 0xB ) ^ 0x3421 ) - 0x4D30 ) ^ 0x7892;
+	if ( flag )
 	{
 		// 版本注册
-		KEY[3] = 0x9C;
-		GetEncryStr(szName, regmen, day);
-		KEY[1] = (HIBYTE(temp_data1)) ^ KEY[7];
-		KEY[2] = (LOBYTE(temp_data1)) ^ KEY[5];
+		KEY[ 3 ] = 0x9C;
+		GetEncryStr( szName, regmen, day );
+		KEY[ 1 ] = ( HIBYTE( temp_data1 ) ) ^ KEY[ 7 ];
+		KEY[ 2 ] = ( LOBYTE( temp_data1 ) ) ^ KEY[ 5 ];
 		/*
 		版本号 9 < ((( KEY[0] ^ KEY[6] ) ^ 0x18 ) + 0x3D ) ^ 0xA7
 		这里取 0x18
 		*/
-		KEY[0] = (((0x18 ^ 0xA7) - 0x3D) ^ 0x18) ^ KEY[6];
-		sprintf(serial, "%02X%02X-%02X%02X-%02X%02X-%02X%02X", KEY[0], KEY[1], KEY[2], KEY[3], KEY[4], KEY[5], KEY[6], KEY[7]);
+		KEY[ 0 ] = ( ( ( 0x18 ^ 0xA7 ) - 0x3D ) ^ 0x18 ) ^ KEY[ 6 ];
+		sprintf( serial, "%02X%02X-%02X%02X-%02X%02X-%02X%02X", KEY[ 0 ], KEY[ 1 ], KEY[ 2 ], KEY[ 3 ], KEY[ 4 ], KEY[ 5 ], KEY[ 6 ], KEY[ 7 ] );
 	}
 	else
 	{
 		// 天数注册
-		KEY[3] = 0xAC;
-		GetEncryStr(szName, regmen, day);
-		KEY[1] = (HIBYTE(temp_data1)) ^ KEY[7];
-		KEY[2] = (LOBYTE(temp_data1)) ^ KEY[5];
+		KEY[ 3 ] = 0xAC;
+		GetEncryStr( szName, regmen, day );
+		KEY[ 1 ] = ( HIBYTE( temp_data1 ) ) ^ KEY[ 7 ];
+		KEY[ 2 ] = ( LOBYTE( temp_data1 ) ) ^ KEY[ 5 ];
 		// 通过天数逆向推导得出计算之前的数值
 		/*
 		day = ((((((( KEY[9] ^ KEY[5] ) << 0x10 ) + (( KEY[4] ^ KEY[8] ) << 0x8 ) + KEY[0] ^ KEY[6])xor 005B8C27)
 		xor 0x22c078) - 0x2C175) xor 0xFFE53167) and 0xFFFFFF
 		*/
-		DWORD temp_data2 = ((((day * 0x11) ^ 0xFFE53167) + 0x2C175) ^ 0x22C078) ^ 0x5B8C27;
-		KEY[0] = (temp_data2 & 0xFF) ^ KEY[6];
-		KEY[8] = ((temp_data2 >> 0x8) & 0xFF) ^ KEY[4];
-		KEY[9] = ((temp_data2 >> 0x10) & 0xFF) ^ KEY[5];
-		sprintf(serial, "%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X", KEY[0], KEY[1], KEY[2], KEY[3], KEY[4], KEY[5], KEY[6], KEY[7], KEY[8], KEY[9]);
+		DWORD temp_data2 = ( ( ( ( day * 0x11 ) ^ 0xFFE53167 ) + 0x2C175 ) ^ 0x22C078 ) ^ 0x5B8C27;
+		KEY[ 0 ] = ( temp_data2 & 0xFF ) ^ KEY[ 6 ];
+		KEY[ 8 ] = ( ( temp_data2 >> 0x8 ) & 0xFF ) ^ KEY[ 4 ];
+		KEY[ 9 ] = ( ( temp_data2 >> 0x10 ) & 0xFF ) ^ KEY[ 5 ];
+		sprintf( serial, "%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X", KEY[ 0 ], KEY[ 1 ], KEY[ 2 ], KEY[ 3 ], KEY[ 4 ], KEY[ 5 ], KEY[ 6 ], KEY[ 7 ], KEY[ 8 ], KEY[ 9 ] );
 	}
 }

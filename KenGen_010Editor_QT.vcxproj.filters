@@ -53,25 +53,25 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="serial_calc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sum_days_difference.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="serial_calc.cpp">
+      <Filter>Generated Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="dialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="serial_calc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sum_days_difference.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
     <ClInclude Include="ui_dialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
@@ -85,19 +85,34 @@
     <None Include="image\1.bmp">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="image\Editor.ico">
-      <Filter>Resource Files</Filter>
-    </None>
     <QtRcc Include="src.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="sum_days_difference.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="serial_calc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource1.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource2.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource3.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="KenGen_010Editor_QT.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="image\Editor.ico" />
   </ItemGroup>
 </Project>

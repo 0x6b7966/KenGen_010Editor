@@ -338,12 +338,3 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-/.qmake.stash
-/Makefile
-/Makefile.Debug
-/Makefile.Release
-/RCe01908
-/RCd01908
-/RCc01908
-/RCb01908
-/RCa01908
